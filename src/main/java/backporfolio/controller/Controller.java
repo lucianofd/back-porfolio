@@ -24,6 +24,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,7 +44,7 @@ public class Controller {
     @Autowired
     PerfilService perfilService;
     
-    
+    @PreAuthorize("HasRole('ADMIN')")
     @PostMapping ("/perfil/new")
     public void addPerfil (@RequestBody Perfil perf){
         perfilService.addPerfil(perf);  
@@ -57,7 +58,7 @@ public class Controller {
         return new ResponseEntity(list, HttpStatus.OK);
     }
     
-    
+    @PreAuthorize("HasRole('ADMIN')")
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") int id){
         if(!perfilService.existsById(id))
@@ -65,7 +66,8 @@ public class Controller {
         perfilService.deletePerfil(id);
         return new ResponseEntity(new Mensajes("Perfil eliminado"), HttpStatus.OK);
     }
-
+    
+    @PreAuthorize("HasRole('ADMIN')")
     @PutMapping("/update/{id}")
     public ResponseEntity<?> update(@PathVariable("id")int  id, @RequestBody PerfilDto perfilDto) {
         if(!perfilService.existsById(id))
@@ -88,7 +90,7 @@ public class Controller {
     @Autowired
     AcercaService acercaService;
     
-
+    @PreAuthorize("HasRole('ADMIN')")
     @PostMapping ("/acerca/new")
     public void addAcerca (@RequestBody AcercaDe acerca){
         acercaService.addAcerca(acerca);  
@@ -102,12 +104,14 @@ public class Controller {
         return new ResponseEntity(list, HttpStatus.OK);
     }
     
+    @PreAuthorize("HasRole('ADMIN')")
     @DeleteMapping("/acerca/delete/{id}")
     public ResponseEntity<?> deleteAcerca(@PathVariable("id") int id){
         acercaService.deleteAcerca(id);
         return new ResponseEntity(new Mensajes("Registro eliminado"), HttpStatus.OK);
     }
     
+    @PreAuthorize("HasRole('ADMIN')")
     @PutMapping("/acerca/update/{id}")
     public ResponseEntity<?> update(@PathVariable("id")int  id, @RequestBody AcercaDeDto acercaDeDto) {
         
@@ -134,7 +138,7 @@ public class Controller {
         
     }
 
-   
+    @PreAuthorize("HasRole('ADMIN')")
     @PostMapping("/education/new")
     public ResponseEntity<?> addEducation(@RequestBody EducationDto educationDto) {
         
@@ -152,7 +156,7 @@ public class Controller {
     
   
     
-    
+    @PreAuthorize("HasRole('ADMIN')")
     @PutMapping("education/update/{id}")
     public ResponseEntity<?> update(@PathVariable("id")int id,   @RequestBody EducationDto educationDto) {
         if(!educationService.existsById(id))
@@ -173,7 +177,7 @@ public class Controller {
         return new ResponseEntity(new Mensajes("Registro actualizado"), HttpStatus.OK);
     }
    
-    
+    @PreAuthorize("HasRole('ADMIN')")
     @DeleteMapping("education/delete/{id}")
     public ResponseEntity<?> deleteEducation(@PathVariable("id") int id){
         if(!educationService.existsById(id))
@@ -196,7 +200,7 @@ public class Controller {
         
     }
 
-    
+    @PreAuthorize("HasRole('ADMIN')")
     @PostMapping("/experiencia/new")
     public ResponseEntity<?> addExperiencia(@RequestBody ExperienciaDto experienciaDto) {
         
@@ -211,7 +215,7 @@ public class Controller {
     
   
     
-
+    @PreAuthorize("HasRole('ADMIN')")
     @PutMapping("experiencia/update/{id}")
     public ResponseEntity<?> update(@PathVariable("id")int id,   @RequestBody ExperienciaDto experienciaDto) {
         if(!experienciaService.existsById(id))
@@ -219,7 +223,7 @@ public class Controller {
         if(StringUtils.isEmpty(experienciaDto.getPosition())   )
            return new ResponseEntity(new Mensajes("El nombre es obligatorio"), HttpStatus.BAD_REQUEST);
        
-       //comprueba que no duplique el nombre, pero que si se pueda actualizar otros campos(aunque el nombre E)(obteng prod obtengo nombre obt id del nombre si es != al ppal es otro)
+       
         if(experienciaService.existsByPosition(experienciaDto.getPosition()) && experienciaService.getByPosition(experienciaDto.getPosition()).get().getExperiencia_id() != id)   
             return new ResponseEntity(new Mensajes("El nombre ya existe,elija otro"), HttpStatus.BAD_REQUEST);
        
@@ -235,7 +239,7 @@ public class Controller {
         return new ResponseEntity(new Mensajes("Registro actualizado"), HttpStatus.OK);
     }
    
-    
+    @PreAuthorize("HasRole('ADMIN')")
     @DeleteMapping("experiencia/delete/{id}")
     public ResponseEntity<?> deleteExperiencia(@PathVariable("id") int id){
         if(!experienciaService.existsById(id))
@@ -257,7 +261,7 @@ public class Controller {
         
     }
 
-    
+    @PreAuthorize("HasRole('ADMIN')")
     @PostMapping("/habilidades/new")
     public ResponseEntity<?> addHabilidades(@RequestBody HabilidadesDto habilidadesDto) {
         
@@ -271,7 +275,7 @@ public class Controller {
     
   
     
-
+    @PreAuthorize("HasRole('ADMIN')")
     @PutMapping("habilidades/update/{id}")
     public ResponseEntity<?> update(@PathVariable("id")int id,   @RequestBody HabilidadesDto habilidadesDto) {
         if(!habilidadesService.existsById(id))
@@ -279,7 +283,7 @@ public class Controller {
         if(StringUtils.isEmpty(habilidadesDto.getNombrehab())   )
            return new ResponseEntity(new Mensajes("El nombre es obligatorio"), HttpStatus.BAD_REQUEST);
        
-       //comprueba que no duplique el nombre, pero que si se pueda actualizar otros campos(aunque el nombre E)(obteng prod obtengo nombre obt id del nombre si es != al ppal es otro)
+       
         if(habilidadesService.existsByNombrehab(habilidadesDto.getNombrehab()) && habilidadesService.getByNombrehab(habilidadesDto.getNombrehab()).get().getHabilidades_id() != id)   
             return new ResponseEntity(new Mensajes("El nombre ya existe,elija otro"), HttpStatus.BAD_REQUEST);
        
@@ -293,7 +297,7 @@ public class Controller {
         return new ResponseEntity(new Mensajes("Registro actualizado"), HttpStatus.OK);
     }
    
-    
+    @PreAuthorize("HasRole('ADMIN')")
     @DeleteMapping("habilidades/delete/{id}")
     public ResponseEntity<?> deleteHabili(@PathVariable("id") int id){
         if(!habilidadesService.existsById(id))
@@ -315,7 +319,7 @@ public class Controller {
         
     }
 
-    
+    @PreAuthorize("HasRole('ADMIN')")
     @PostMapping("/proyectos/new")
     public ResponseEntity<?> addProy(@RequestBody ProyectosDto proyectosDto) {
         
@@ -330,7 +334,7 @@ public class Controller {
     
   
     
-
+    @PreAuthorize("HasRole('ADMIN')")
     @PutMapping("proyectos/update/{id}")
     public ResponseEntity<?> update(@PathVariable("id")int id,   @RequestBody ProyectosDto proyectosDto) {
         if(!proyectosService.existsById(id))
@@ -353,7 +357,7 @@ public class Controller {
         return new ResponseEntity(new Mensajes("Registro actualizado"), HttpStatus.OK);
     }
    
-    
+    @PreAuthorize("HasRole('ADMIN')")
     @DeleteMapping("proyectos/delete/{id}")
     public ResponseEntity<?> deleteProy(@PathVariable("id") int id){
         if(!proyectosService.existsById(id))
@@ -362,10 +366,6 @@ public class Controller {
         return new ResponseEntity(new Mensajes("Registro eliminado"), HttpStatus.OK);
     }
     
-    
-    
-    
-    
-    
+       
     
 }
